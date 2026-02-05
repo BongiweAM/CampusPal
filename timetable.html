@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable - Campus Pal</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .timetable-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .timetable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .view-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--primary-yellow);
+            background: white;
+            color: var(--dark-gray);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .view-btn.active {
+            background: var(--primary-yellow);
+            color: white;
+        }
+        
+        .view-btn:hover:not(.active) {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .current-week {
+            text-align: center;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+        
+        .week-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .week-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tut-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Day View */
+        .day-view {
+            display: none;
+        }
+        
+        .day-view.active {
+            display: block;
+        }
+        
+        .day-header {
+            background: linear-gradient(135deg, var(--tut-blue), #0044CC);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .time-slots {
+            background: white;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .time-slot {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .time-slot:last-child {
+            border-bottom: none;
+        }
+        
+        .time-label {
+            width: 100px;
+            padding: 20px;
+            background: var(--light-gray);
+            font-weight: 600;
+            color: var(--tut-blue);
+            text-align: center;
+        }
+        
+        .slot-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .class-block {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--secondary-yellow));
+            padding: 20px;
+            border-radius: 8px;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--tut-blue);
+        }
+        
+        .class-block:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .class-time {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--tut-blue);
+        }
+        
+        .class-subject {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .class-details {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .class-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Week View */
+        .week-view {
+            display: none;
+        }
+        
+        .week-view.active {
+            display: block;
+        }
+        
+        .week-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 1px;
+            background: #ddd;
+        }
+        
+        .grid-header {
+            background: var(--tut-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .time-column {
+            background: var(--light-gray);
+        }
+        
+        .grid-cell {
+            background: white;
+            min-height: 80px;
+            padding: 5px;
+            position: relative;
+        }
+        
+        .grid-cell.has-class {
+            background: rgba(255, 215, 0, 0.1);
+            cursor: pointer;
+        }
+        
+        .grid-class {
+            background: var(--primary-yellow);
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 0.8rem;
+            margin: 2px;
+            color: var(--dark-gray);
+            border-left: 3px solid var(--tut-blue);
+        }
+        
+        /* List View */
+        .list-view {
+            display: none;
+        }
+        
+        .list-view.active {
+            display: block;
+        }
+        
+        .list-item {
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .list-item-header {
+            background: var(--light-gray);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-item-content {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Navigation Modal */
+        .navigation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .navigation-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .navigation-steps {
+            margin: 20px 0;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .step-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-details {
+            flex: 1;
+        }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--tut-blue);
+            margin: 0 auto 15px;
+        }
+        
+        /* Export Options */
+        .export-options {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+        
+        .export-btn {
+            background: var(--tut-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .no-classes {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-gray);
+        }
+        
+        .no-classes i {
+            font-size: 3rem;
+            color: var(--primary-yellow);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="timetable-container">
+        <div class="page-header">
+            <h1><i class="fas fa-calendar-alt"></i> My Timetable</h1>
+            <p>View and manage your class schedule</p>
+        </div>
+
+        <!-- View Controls -->
+        <div class="timetable-header">
+            <div class="view-controls">
+                <button class="view-btn active" data-view="day">
+                    <i class="fas fa-calendar-day"></i> Day View
+                </button>
+                <button class="view-btn" data-view="week">
+                    <i class="fas fa-calendar-week"></i> Week View
+                </button>
+                <button class="view-btn" data-view="list">
+                    <i class="fas fa-list"></i> List View
+                </button>
+            </div>
+
+            <div class="week-nav">
+                <button class="week-btn" id="prevWeek">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="current-week">
+                    <h3 id="currentWeekRange">Week 10: Mar 11 - Mar 15, 2024</h3>
+                    <p id="currentSemester">Semester 1, 2024</p>
+                </div>
+                
+                <button class="week-btn" id="nextWeek">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="export-options">
+                <button class="export-btn" id="exportTimetable">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Day View -->
+        <div class="day-view active" id="dayView">
+            <div class="day-header">
+                <div>
+                    <h2 id="currentDay">Monday, March 11</h2>
+                    <p id="dayClassesCount">3 classes today</p>
+                </div>
+                <div class="day-nav">
+                    <button class="day-btn" id="prevDay">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <button class="day-btn" id="nextDay">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="time-slots">
+                <!-- Time slots will be populated by JavaScript -->
+                <div class="time-slot">
+                    <div class="time-label">08:00 - 09:00</div>
+                    <div class="slot-content">
+                        <div class="class-block" data-class-id="1">
+                            <div class="class-time">08:00 - 10:00</div>
+                            <div class="class-subject">Programming 1</div>
+                            <div class="class-details">
+                                <div class="class-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>IT Building 101</span>
+                                </div>
+                                <div class="class-detail">
+                                    <i class="fas fa-user"></i>
+                                    <span>Dr. Smith</span>
+                                </div>
+                                <div class="class-detail">
+                                    <i class="fas fa-book"></i>
+                                    <span>ICT 1511</span>
+                                </div>
+                            </div>
+                            <button class="btn-navigate-class" style="margin-top: 10px;">
+                                <i class="fas fa-directions"></i> Navigate to Class
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="time-slot">
+                    <div class="time-label">10:00 - 11:00</div>
+                    <div class="slot-content">
+                        <div class="class-block" data-class-id="2">
+                            <div class="class-time">10:00 - 12:00</div>
+                            <div class="class-subject">Mathematics 1</div>
+                            <div class="class-details">
+                                <div class="class-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Science Building 201</span>
+                                </div>
+                                <div class="class-detail">
+                                    <i class="fas fa-user"></i>
+                                    <span>Prof. Johnson</span>
+                                </div>
+                                <div class="class-detail">
+                                    <i class="fas fa-book"></i>
+                                    <span>MAT 1511</span>
+                                </div>
+                            </div>
+                            <button class="btn-navigate-class">
+                                <i class="fas fa-directions"></i> Navigate to Class
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Week View -->
+        <div class="week-view" id="weekView">
+            <div class="week-grid">
+                <div class="grid-header time-column">Time</div>
+                <div class="grid-header">Monday</div>
+                <div class="grid-header">Tuesday</div>
+                <div class="grid-header">Wednesday</div>
+                <div class="grid-header">Thursday</div>
+                <div class="grid-header">Friday</div>
+                
+                <!-- Grid will be populated by JavaScript -->
+                <div class="time-column">08:00</div>
+                <div class="grid-cell has-class">
+                    <div class="grid-class">Programming 1<br>IT 101</div>
+                </div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell has-class">
+                    <div class="grid-class">Web Dev<br>IT Lab 3</div>
+                </div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div class="list-view" id="listView">
+            <div class="list-item">
+                <div class="list-item-header">
+                    <h3>Monday, March 11</h3>
+                    <span class="day-total">3 classes</span>
+                </div>
+                <div class="list-item-content">
+                    <div class="class-block">
+                        <div class="class-time">08:00 - 10:00</div>
+                        <div class="class-subject">Programming 1</div>
+                        <div class="class-details">
+                            <div class="class-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>IT Building 101</span>
+                            </div>
+                            <div class="class-detail">
+                                <i class="fas fa-user"></i>
+                                <span>Dr. Smith</span>
+                            </div>
+                        </div>
+                        <button class="btn-navigate-class">
+                            <i class="fas fa-directions"></i> Navigate
+                        </button>
+                    </div>
+                    
+                    <div class="class-block">
+                        <div class="class-time">10:00 - 12:00</div>
+                        <div class="class-subject">Mathematics 1</div>
+                        <div class="class-details">
+                            <div class="class-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Science Building 201</span>
+                            </div>
+                            <div class="class-detail">
+                                <i class="fas fa-user"></i>
+                                <span>Prof. Johnson</span>
+                            </div>
+                        </div>
+                        <button class="btn-navigate-class">
+                            <i class="fas fa-directions"></i> Navigate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Classes Message -->
+        <div class="no-classes" id="noClassesMessage" style="display: none;">
+            <i class="fas fa-calendar-check"></i>
+            <h3>No Classes Scheduled</h3>
+            <p>You have no classes scheduled for this period.</p>
+            <button class="btn-primary" onclick="window.location.href='add-class.html'">
+                <i class="fas fa-plus"></i> Add Custom Event
+            </button>
+        </div>
+
+        <!-- Upcoming Assignments -->
+        <div class="upcoming-assignments" style="margin-top: 40px; background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
+            <h2><i class="fas fa-tasks"></i> Upcoming Assignments</h2>
+            <div class="assignments-list" style="margin-top: 20px;">
+                <div class="assignment-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--light-gray); border-radius: 8px; margin-bottom: 10px;">
+                    <div>
+                        <h4 style="margin: 0;">Programming 1 Assignment</h4>
+                        <p style="margin: 5px 0; color: var(--text-gray);">Due: March 18, 2024</p>
+                    </div>
+                    <button class="btn-primary" style="padding: 8px 20px;">
+                        <i class="fas fa-external-link-alt"></i> View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Modal -->
+        <div class="navigation-modal" id="navigationModal">
+            <div class="navigation-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-directions"></i> Navigate to Class</h2>
+                    <button class="close-modal" onclick="closeNavigationModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="navigation-info">
+                    <div class="step-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3 id="navClassName">Programming 1</h3>
+                    <p id="navClassVenue">IT Building 101</p>
+                    <p id="navClassTime">Monday, 08:00 - 10:00</p>
+                </div>
+                
+                <div class="navigation-steps" id="navigationSteps">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-details">
+                            <h4>Start from your current location</h4>
+                            <p>Main Student Center Entrance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-details">
+                            <h4>Walk straight ahead</h4>
+                            <p>Continue for 200 meters towards IT Faculty building</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-details">
+                            <h4>Turn left at the library</h4>
+                            <p>Pass the main library building on your right</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-details">
+                            <h4>Arrive at destination</h4>
+                            <p>IT Building 101 is on the ground floor</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation-stats">
+                    <div style="display: flex; justify-content: space-around; text-align: center; margin: 20px 0;">
+                        <div>
+                            <div class="stat-value">5-7</div>
+                            <div class="stat-label">Minutes walk</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">300m</div>
+                            <div class="stat-label">Distance</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">Ground</div>
+                            <div class="stat-label">Floor</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn-primary" style="width: 100%; padding: 15px;">
+                        <i class="fas fa-compass"></i> Start Navigation
+                    </button>
+                    <button class="btn-secondary" onclick="closeNavigationModal()" style="width: 100%; padding: 15px; margin-top: 10px;">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample timetable data
+        const timetableData = {
+            currentWeek: 10,
+            semester: "Semester 1, 2024",
+            days: [
+                {
+                    date: "2024-03-11",
+                    day: "Monday",
+                    classes: [
+                        {
+                            id: 1,
+                            time: "08:00 - 10:00",
+                            subject: "Programming 1",
+                            code: "ICT 1511",
+                            venue: "IT Building 101",
+                            lecturer: "Dr. Smith",
+                            type: "Lecture"
+                        },
+                        {
+                            id: 2,
+                            time: "10:00 - 12:00",
+                            subject: "Mathematics 1",
+                            code: "MAT 1511",
+                            venue: "Science Building 201",
+                            lecturer: "Prof. Johnson",
+                            type: "Lecture"
+                        },
+                        {
+                            id: 3,
+                            time: "14:00 - 16:00",
+                            subject: "Web Development Lab",
+                            code: "ICT 1522",
+                            venue: "IT Lab 3",
+                            lecturer: "Mr. Brown",
+                            type: "Practical"
+                        }
+                    ]
+                },
+                {
+                    date: "2024-03-12",
+                    day: "Tuesday",
+                    classes: [
+                        {
+                            id: 4,
+                            time: "09:00 - 11:00",
+                            subject: "Database Systems",
+                            code: "ICT 1521",
+                            venue: "IT Building 102",
+                            lecturer: "Ms. Williams",
+                            type: "Lecture"
+                        }
+                    ]
+                },
+                {
+                    date: "2024-03-13",
+                    day: "Wednesday",
+                    classes: [
+                        {
+                            id: 5,
+                            time: "08:00 - 12:00",
+                            subject: "Networking Basics",
+                            code: "ICT 1531",
+                            venue: "IT Building 103",
+                            lecturer: "Dr. Davis",
+                            type: "Workshop"
+                        }
+                    ]
+                },
+                {
+                    date: "2024-03-14",
+                    day: "Thursday",
+                    classes: [
+                        {
+                            id: 6,
+                            time: "10:00 - 12:00",
+                            subject: "Software Engineering",
+                            code: "ICT 1541",
+                            venue: "IT Building 104",
+                            lecturer: "Prof. Wilson",
+                            type: "Lecture"
+                        }
+                    ]
+                },
+                {
+                    date: "2024-03-15",
+                    day: "Friday",
+                    classes: [
+                        {
+                            id: 7,
+                            time: "14:00 - 16:00",
+                            subject: "Project Session",
+                            code: "ICT 1551",
+                            venue: "Project Lab 1",
+                            lecturer: "All Lecturers",
+                            type: "Group Work"
+                        }
+                    ]
+                }
+            ]
+        };
+        
+        let currentView = 'day';
+        let currentWeek = 10;
+        let currentDayIndex = 0; // Monday
+        
+        // Initialize the timetable
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTimetable();
+            setupEventListeners();
+            updateWeekDisplay();
+            updateDayDisplay();
+        });
+        
+        function initializeTimetable() {
+            updateWeekDisplay();
+            updateDayDisplay();
+            populateWeekGrid();
+        }
+        
+        function setupEventListeners() {
+            // View switching
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const view = this.dataset.view;
+                    switchView(view);
+                });
+            });
+            
+            // Week navigation
+            document.getElementById('prevWeek').addEventListener('click', () => navigateWeek(-1));
+            document.getElementById('nextWeek').addEventListener('click', () => navigateWeek(1));
+            
+            // Day navigation
+            document.getElementById('prevDay').addEventListener('click', () => navigateDay(-1));
+            document.getElementById('nextDay').addEventListener('click', () => navigateDay(1));
+            
+            // Navigation buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-navigate-class')) {
+                    const classBlock = e.target.closest('.class-block');
+                    if (classBlock) {
+                        const classId = classBlock.dataset.classId;
+                        showNavigationModal(classId);
+                    }
+                }
+            });
+            
+            // Export timetable
+            document.getElementById('exportTimetable').addEventListener('click', exportTimetable);
+        }
+        
+        function switchView(view) {
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === view) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Show selected view, hide others
+            ['day', 'week', 'list'].forEach(v => {
+                const viewElement = document.getElementById(`${v}View`);
+                if (v === view) {
+                    viewElement.classList.add('active');
+                } else {
+                    viewElement.classList.remove('active');
+                }
+            });
+            
+            currentView = view;
+            
+            // Update no classes message
+            checkNoClasses();
+        }
+        
+        function navigateWeek(direction) {
+            currentWeek += direction;
+            updateWeekDisplay();
+            
+            // In a real app, this would fetch new week data
+            console.log(`Week changed to: ${currentWeek}`);
+        }
+        
+        function navigateDay(direction) {
+            currentDayIndex += direction;
+            
+            // Wrap around
+            if (currentDayIndex < 0) {
+                currentDayIndex = 6; // Assuming 7 days in a week
+                navigateWeek(-1);
+            } else if (currentDayIndex > 6) {
+                currentDayIndex = 0;
+                navigateWeek(1);
+            }
+            
+            updateDayDisplay();
+        }
+        
+        function updateWeekDisplay() {
+            const weekStart = new Date(2024, 2, 11 + (currentWeek - 10) * 7); // March 11, 2024
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 4); // Monday to Friday
+            
+            const options = { month: 'short', day: 'numeric' };
+            const weekRange = `Week ${currentWeek}: ${weekStart.toLocaleDateString('en-ZA', options)} - ${weekEnd.toLocaleDateString('en-ZA', options)}, 2024`;
+            
+            document.getElementById('currentWeekRange').textContent = weekRange;
+            document.getElementById('currentSemester').textContent = timetableData.semester;
+        }
+        
+        function updateDayDisplay() {
+            const dayData = timetableData.days[currentDayIndex];
+            const date = new Date(dayData.date);
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDay').textContent = date.toLocaleDateString('en-ZA', options);
+            
+            const classCount = dayData.classes.length;
+            document.getElementById('dayClassesCount').textContent = `${classCount} ${classCount === 1 ? 'class' : 'classes'} today`;
+            
+            // Populate day view
+            populateDayView(dayData);
+            
+            // Check if no classes
+            checkNoClasses();
+        }
+        
+        function populateDayView(dayData) {
+            const timeSlotsContainer = document.querySelector('.time-slots');
+            timeSlotsContainer.innerHTML = '';
+            
+            if (dayData.classes.length === 0) {
+                timeSlotsContainer.innerHTML = `
+                    <div class="no-classes">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>No Classes Today</h3>
+                        <p>Enjoy your day off!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create time slots from 08:00 to 18:00
+            for (let hour = 8; hour < 18; hour++) {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                
+                const timeLabel = document.createElement('div');
+                timeLabel.className = 'time-label';
+                timeLabel.textContent = `${hour.toString().padStart(2, '0')}:00 - ${(hour + 1).toString().padStart(2, '0')}:00`;
+                
+                const slotContent = document.createElement('div');
+                slotContent.className = 'slot-content';
+                
+                // Find classes in this time slot
+                const classesInSlot = dayData.classes.filter(cls => {
+                    const startHour = parseInt(cls.time.split(':')[0]);
+                    return startHour === hour;
+                });
+                
+                if (classesInSlot.length > 0) {
+                    classesInSlot.forEach(cls => {
+                        const classBlock = createClassBlock(cls);
+                        slotContent.appendChild(classBlock);
+                    });
+                }
+                
+                timeSlot.appendChild(timeLabel);
+                timeSlot.appendChild(slotContent);
+                timeSlotsContainer.appendChild(timeSlot);
+            }
+        }
+        
+        function populateWeekGrid() {
+            // This would be more complex in a real implementation
+            // For now, we'll just show a basic grid
+            console.log('Week grid populated');
+        }
+        
+        function createClassBlock(classData) {
+            const classBlock = document.createElement('div');
+            classBlock.className = 'class-block';
+            classBlock.dataset.classId = classData.id;
+            
+            classBlock.innerHTML = `
+                <div class="class-time">${classData.time}</div>
+                <div class="class-subject">${classData.subject}</div>
+                <div class="class-details">
+                    <div class="class-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${classData.venue}</span>
+                    </div>
+                    <div class="class-detail">
+                        <i class="fas fa-user"></i>
+                        <span>${classData.lecturer}</span>
+                    </div>
+                    <div class="class-detail">
+                        <i class="fas fa-book"></i>
+                        <span>${classData.code}</span>
+                    </div>
+                </div>
+                <button class="btn-navigate-class" style="margin-top: 10px;">
+                    <i class="fas fa-directions"></i> Navigate to Class
+                </button>
+            `;
+            
+            return classBlock;
+        }
+        
+        function showNavigationModal(classId) {
+            // Find class data
+            const classData = findClassById(classId);
+            if (!classData) return;
+            
+            // Update modal content
+            document.getElementById('navClassName').textContent = classData.subject;
+            document.getElementById('navClassVenue').textContent = classData.venue;
+            document.getElementById('navClassTime').textContent = `${classData.day}, ${classData.time}`;
+            
+            // Show modal
+            document.getElementById('navigationModal').style.display = 'flex';
+            
+            // Generate navigation steps based on venue
+            updateNavigationSteps(classData.venue);
+        }
+        
+        function closeNavigationModal() {
+            document.getElementById('navigationModal').style.display = 'none';
+        }
+        
+        function updateNavigationSteps(venue) {
+            const stepsContainer = document.getElementById('navigationSteps');
+            
+            // Different steps based on venue
+            let steps = [];
+            
+            if (venue.includes('IT Building')) {
+                steps = [
+                    "Start from the Main Student Center Entrance",
+                    "Walk straight ahead for 200 meters towards the IT Faculty building",
+                    "Turn left at the library building",
+                    `Continue straight until you reach ${venue}`,
+                    "Your classroom is on the ground floor, room numbers are on the right"
+                ];
+            } else if (venue.includes('Science Building')) {
+                steps = [
+                    "Start from the Main Student Center Entrance",
+                    "Walk towards the cafeteria area",
+                    "Turn right at the auditorium",
+                    "Continue past the sports complex",
+                    `The Science Building will be on your left - ${venue}`
+                ];
+            } else {
+                steps = [
+                    "Start from the Main Student Center Entrance",
+                    "Follow the main pathway towards academic buildings",
+                    "Look for building signs along the way",
+                    `Ask for directions to ${venue} if needed`,
+                    "Use campus map for visual guidance"
+                ];
+            }
+            
+            // Update steps in modal
+            let stepsHTML = '';
+            steps.forEach((step, index) => {
+                stepsHTML += `
+                    <div class="step-item">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-details">
+                            <h4>Step ${index + 1}</h4>
+                            <p>${step}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            stepsContainer.innerHTML = stepsHTML;
+        }
+        
+        function findClassById(classId) {
+            for (const day of timetableData.days) {
+                const foundClass = day.classes.find(cls => cls.id == classId);
+                if (foundClass) {
+                    return { ...foundClass, day: day.day };
+                }
+            }
+            return null;
+        }
+        
+        function exportTimetable() {
+            // In a real app, this would generate and download a file
+            const exportOptions = `
+                <div style="padding: 20px;">
+                    <h3>Export Timetable</h3>
+                    <p>Choose export format:</p>
+                    <button onclick="exportAsPDF()" style="margin: 5px; padding: 10px 20px;">PDF</button>
+                    <button onclick="exportAsCSV()" style="margin: 5px; padding: 10px 20px;">CSV</button>
+                    <button onclick="exportAsImage()" style="margin: 5px; padding: 10px 20px;">Image</button>
+                    <button onclick="exportToCalendar()" style="margin: 5px; padding: 10px 20px;">Calendar</button>
+                </div>
+            `;
+            
+            alert('Export functionality would be implemented here');
+        }
+        
+        function checkNoClasses() {
+            const dayData = timetableData.days[currentDayIndex];
+            const hasClasses = dayData.classes.length > 0;
+            
+            // Show/hide no classes message based on view
+            if (!hasClasses && currentView === 'day') {
+                document.getElementById('noClassesMessage').style.display = 'block';
+            } else {
+                document.getElementById('noClassesMessage').style.display = 'none';
+            }
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            // Set current day to today
+            const today = new Date().getDay();
+            // Adjust for Monday as index 0 (Sunday = 0, Monday = 1, etc.)
+            currentDayIndex = today === 0 ? 6 : today - 1;
+            updateDayDisplay();
+        });
+    </script>
+</body>
+</html>

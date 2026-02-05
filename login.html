@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Campus Pal</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-page-container">
+        <div class="login-wrapper">
+            <div class="login-header">
+                <div class="logos">
+                    <img src="../images/tut-logo.png" alt="TUT Logo" class="logo-tut">
+                    <img src="../images/campus-pal-logo.png" alt="Campus Pal Logo" class="logo-app">
+                </div>
+                <h1>Welcome to Campus Pal</h1>
+                <p>Your TUT Student Companion</p>
+            </div>
+
+            <div class="login-tabs">
+                <button class="tab-btn active" id="tabLogin">Login</button>
+                <button class="tab-btn" id="tabSignup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="login-form active" id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="studentNumber" placeholder="Student Number" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="demoPin" placeholder="Demo PIN (1234)" required>
+                </div>
+                
+                <div class="remember-forgot">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="rememberMe">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                    <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                
+                <div class="demo-note">
+                    <p><strong>Demo Account:</strong> Use student number <strong>202312345</strong> with password <strong>student123</strong> and PIN <strong>1234</strong></p>
+                </div>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="signup-form" id="signupForm" style="display: none;">
+                <div class="form-row">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="firstName" placeholder="First Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="lastName" placeholder="Last Name" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="newStudentNumber" placeholder="Student Number" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="TUT Email Address" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="newPassword" placeholder="Password" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="registrationPin" placeholder="Registration PIN (From TUT)" required>
+                </div>
+                
+                <div class="terms-agreement">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Need help? <a href="help.html">Visit our help center</a></p>
+                <p>By continuing, you agree to Campus Pal's Terms of Service and Privacy Policy</p>
+            </div>
+        </div>
+
+        <div class="login-features">
+            <h2>Why Campus Pal?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Smart Timetable</h3>
+                    <p>View and manage your classes with built-in navigation</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-id-card"></i>
+                    <h3>Digital Student Card</h3>
+                    <p>Apply and track your student card online</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Campus Navigation</h3>
+                    <p>Never get lost on Soshanguve South campus</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bell"></i>
+                    <h3>Real-time Updates</h3>
+                    <p>Stay informed about campus events and announcements</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        // Tab switching functionality
+        document.getElementById('tabLogin').addEventListener('click', function() {
+            document.getElementById('tabLogin').classList.add('active');
+            document.getElementById('tabSignup').classList.remove('active');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+        });
+
+        document.getElementById('tabSignup').addEventListener('click', function() {
+            document.getElementById('tabSignup').classList.add('active');
+            document.getElementById('tabLogin').classList.remove('active');
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Login logic will be handled in main script
+            window.location.href = '../index.html';
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Account created successfully! Please login with your credentials.');
+            document.getElementById('tabLogin').click();
+        });
+    </script>
+</body>
+</html>

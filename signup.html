@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Campus Pal</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .signup-progress {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .signup-progress::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 25%;
+        }
+        
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .step-circle.active {
+            background: var(--tut-blue);
+        }
+        
+        .step-circle.completed {
+            background: var(--primary-yellow);
+        }
+        
+        .signup-form-section {
+            display: none;
+        }
+        
+        .signup-form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-page-container">
+        <div class="signup-wrapper">
+            <div class="signup-header">
+                <div class="logos">
+                    <img src="../images/tut-logo.png" alt="TUT Logo" class="logo-tut">
+                    <img src="../images/campus-pal-logo.png" alt="Campus Pal Logo" class="logo-app">
+                </div>
+                <h1>Create Your Campus Pal Account</h1>
+                <p>Join thousands of TUT students using Campus Pal</p>
+            </div>
+
+            <div class="signup-progress">
+                <div class="progress-step">
+                    <div class="step-circle active" id="step1">1</div>
+                    <span>Personal Info</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step2">2</div>
+                    <span>Academic Info</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step3">3</div>
+                    <span>Account Setup</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-circle" id="step4">4</div>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+
+            <!-- Step 1: Personal Information -->
+            <form class="signup-form-section active" id="step1Form">
+                <h2>Personal Information</h2>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="idNumber">South African ID Number *</label>
+                    <input type="text" id="idNumber" pattern="[0-9]{13}" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="dob">Date of Birth *</label>
+                    <input type="date" id="dob" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" pattern="[0-9]{10}" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-next" onclick="nextStep(2)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </form>
+
+            <!-- Step 2: Academic Information -->
+            <form class="signup-form-section" id="step2Form">
+                <h2>Academic Information</h2>
+                
+                <div class="input-group">
+                    <label for="studentNumber">TUT Student Number *</label>
+                    <input type="text" id="studentNumber" pattern="[0-9]{9}" required>
+                    <small>Format: 202312345 (9 digits)</small>
+                </div>
+                
+                <div class="input-group">
+                    <label for="campus">Campus *</label>
+                    <select id="campus" required>
+                        <option value="">Select Campus</option>
+                        <option value="soshanguve-south">Soshanguve South Campus</option>
+                        <option value="soshanguve-north">Soshanguve North Campus</option>
+                        <option value="pretoria">Pretoria Campus</option>
+                        <option value="arcadia">Arcadia Campus</option>
+                        <option value="polokwane">Polokwane Campus</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="faculty">Faculty *</label>
+                    <select id="faculty" required>
+                        <option value="">Select Faculty</option>
+                        <option value="ict">Information and Communication Technology</option>
+                        <option value="engineering">Engineering and the Built Environment</option>
+                        <option value="science">Science</option>
+                        <option value="management">Management Sciences</option>
+                        <option value="humanities">Humanities</option>
+                        <option value="arts">Arts and Design</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="course">Course/Program *</label>
+                    <input type="text" id="course" required>
+                    <small>e.g., Diploma in Information Technology</small>
+                </div>
+                
+                <div class="input-group">
+                    <label for="year">Year of Study *</label>
+                    <select id="year" required>
+                        <option value="">Select Year</option>
+                        <option value="1">First Year</option>
+                        <option value="2">Second Year</option>
+                        <option value="3">Third Year</option>
+                        <option value="4">Fourth Year</option>
+                        <option value="postgrad">Postgraduate</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button type="button" class="btn-next" onclick="nextStep(3)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </form>
+
+            <!-- Step 3: Account Setup -->
+            <form class="signup-form-section" id="step3Form">
+                <h2>Account Setup</h2>
+                
+                <div class="input-group">
+                    <label for="email">TUT Email Address *</label>
+                    <input type="email" id="email" required>
+                    <small>Format: studentnumber@tut4life.ac.za</small>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" required>
+                        <div class="password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="securityQuestion">Security Question *</label>
+                    <select id="securityQuestion" required>
+                        <option value="">Select a security question</option>
+                        <option value="mother-maiden-name">What is your mother's maiden name?</option>
+                        <option value="pet-name">What was your first pet's name?</option>
+                        <option value="birth-city">In what city were you born?</option>
+                        <option value="high-school">What was the name of your high school?</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="securityAnswer">Security Answer *</label>
+                    <input type="text" id="securityAnswer" required>
+                </div>
+                
+                <div class="terms-agreement">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span class="checkmark"></span>
+                        I agree to receive important notifications via email and SMS
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button type="button" class="btn-next" onclick="nextStep(4)">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </form>
+
+            <!-- Step 4: Confirmation -->
+            <div class="signup-form-section" id="step4Form">
+                <h2>Review & Submit</h2>
+                
+                <div class="review-section">
+                    <div class="review-card">
+                        <h3>Personal Information</h3>
+                        <div id="reviewPersonal"></div>
+                    </div>
+                    
+                    <div class="review-card">
+                        <h3>Academic Information</h3>
+                        <div id="reviewAcademic"></div>
+                    </div>
+                    
+                    <div class="review-card">
+                        <h3>Account Information</h3>
+                        <div id="reviewAccount"></div>
+                    </div>
+                </div>
+                
+                <div class="final-terms">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="agreeFinalTerms" required>
+                        <span class="checkmark"></span>
+                        I certify that all information provided is accurate and complete. I agree to the 
+                        <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-prev" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Previous</button>
+                    <button type="submit" class="btn-submit" onclick="submitRegistration()">Create Account <i class="fas fa-check"></i></button>
+                </div>
+            </div>
+
+            <div class="signup-footer">
+                <p>Already have an account? <a href="login.html">Sign In</a></p>
+                <p>By creating an account, you agree to Campus Pal's Terms of Service and Privacy Policy</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        
+        function updateProgressSteps() {
+            // Update step circles
+            for (let i = 1; i <= 4; i++) {
+                const stepCircle = document.getElementById(`step${i}`);
+                if (i < currentStep) {
+                    stepCircle.className = 'step-circle completed';
+                } else if (i === currentStep) {
+                    stepCircle.className = 'step-circle active';
+                } else {
+                    stepCircle.className = 'step-circle';
+                }
+            }
+            
+            // Show current form, hide others
+            for (let i = 1; i <= 4; i++) {
+                const form = document.getElementById(`step${i}Form`);
+                if (i === currentStep) {
+                    form.classList.add('active');
+                } else {
+                    form.classList.remove('active');
+                }
+            }
+        }
+        
+        function nextStep(next) {
+            // Validate current step before proceeding
+            if (validateStep(currentStep)) {
+                currentStep = next;
+                updateProgressSteps();
+                if (currentStep === 4) {
+                    populateReview();
+                }
+            }
+        }
+        
+        function prevStep(prev) {
+            currentStep = prev;
+            updateProgressSteps();
+        }
+        
+        function validateStep(step) {
+            let isValid = true;
+            
+            if (step === 1) {
+                const firstName = document.getElementById('firstName').value;
+                const lastName = document.getElementById('lastName').value;
+                const idNumber = document.getElementById('idNumber').value;
+                const dob = document.getElementById('dob').value;
+                const phone = document.getElementById('phone').value;
+                
+                if (!firstName || !lastName || !idNumber || !dob || !phone) {
+                    alert('Please fill in all required fields in Step 1');
+                    isValid = false;
+                }
+                
+                if (idNumber && !/^[0-9]{13}$/.test(idNumber)) {
+                    alert('Please enter a valid 13-digit ID number');
+                    isValid = false;
+                }
+            }
+            
+            // Add validation for other steps as needed
+            
+            return isValid;
+        }
+        
+        function populateReview() {
+            // Personal Information
+            const personalInfo = `
+                <p><strong>Name:</strong> ${document.getElementById('firstName').value} ${document.getElementById('lastName').value}</p>
+                <p><strong>ID Number:</strong> ${document.getElementById('idNumber').value}</p>
+                <p><strong>Phone:</strong> ${document.getElementById('phone').value}</p>
+            `;
+            document.getElementById('reviewPersonal').innerHTML = personalInfo;
+            
+            // Academic Information
+            const campusText = document.getElementById('campus').options[document.getElementById('campus').selectedIndex].text;
+            const facultyText = document.getElementById('faculty').options[document.getElementById('faculty').selectedIndex].text;
+            const yearText = document.getElementById('year').options[document.getElementById('year').selectedIndex].text;
+            
+            const academicInfo = `
+                <p><strong>Student Number:</strong> ${document.getElementById('studentNumber').value}</p>
+                <p><strong>Campus:</strong> ${campusText}</p>
+                <p><strong>Faculty:</strong> ${facultyText}</p>
+                <p><strong>Year:</strong> ${yearText}</p>
+            `;
+            document.getElementById('reviewAcademic').innerHTML = academicInfo;
+            
+            // Account Information
+            const accountInfo = `
+                <p><strong>Email:</strong> ${document.getElementById('email').value}</p>
+                <p><strong>Security Question:</strong> ${document.getElementById('securityQuestion').options[document.getElementById('securityQuestion').selectedIndex].text}</p>
+            `;
+            document.getElementById('reviewAccount').innerHTML = accountInfo;
+        }
+        
+        function submitRegistration() {
+            if (!document.getElementById('agreeFinalTerms').checked) {
+                alert('Please agree to the terms and conditions');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Account created successfully! Please check your email for verification.');
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // Initialize
+        updateProgressSteps();
+    </script>
+</body>
+</html>
