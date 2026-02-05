@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Campus Pal - TUT Student Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Page (Initial View) -->
+    <div class="container login-container" id="loginPage">
+        <div class="login-box">
+            <div class="logo-section">
+                <img src="images/tut_logo.webp" alt="TUT Logo" class="tut-logo">
+                <img src="images/compuspal_logo.jpeg" alt="Campus Pal Logo" class="app-logo">
+                <h1>Campus Pal</h1>
+                <p>Your TUT Student Companion</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="studentNumber" placeholder="Student Number" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                
+                <div class="input-group otp-group">
+                    <label>Demo PIN</label>
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" data-index="0">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-login">Sign In</button>
+                
+                <div class="login-options">
+                    <a href="#" id="forgotPassword">Forgot Password?</a>
+                </div>
+            </form>
+            
+            <div class="demo-credentials">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Student Number: 202312345</p>
+                <p>Password: student123</p>
+                <p>PIN: 1234</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container (Hidden Initially) -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <img src="images/compuspal_logo.jpeg" alt="Campus Pal Logo" class="nav-logo">
+                <span>Campus Pal</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" id="navHome"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" id="navTimetable"><i class="fas fa-calendar"></i> Timetable</a></li>
+                <li><a href="#" id="navStudentCard"><i class="fas fa-id-card"></i> Student Card</a></li>
+                <li><a href="#" id="navCampusMap"><i class="fas fa-map-marked-alt"></i> Campus Map</a></li>
+                <li><a href="#" id="navProfile"><i class="fas fa-user-circle"></i> Profile</a></li>
+                <li><a href="#" id="navLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+            <!-- Content will be loaded dynamically -->
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
